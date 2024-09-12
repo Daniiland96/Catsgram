@@ -8,6 +8,7 @@ import java.time.Instant;
 @Setter
 @ToString
 @EqualsAndHashCode(of = {"email"})
+@Builder
 public class User {
     private Long id;
     private String username;
