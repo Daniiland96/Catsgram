@@ -9,9 +9,8 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-// Указываем, что класс PostService - является бином и его
-// нужно добавить в контекст приложения
 @Service
 public class PostService {
     private final Map<Long, Post> posts = new HashMap<>();
@@ -21,8 +20,27 @@ public class PostService {
         this.userService = userService;
     }
 
-    public Collection<Post> findAll() {
-        return posts.values();
+    public Collection<Post> findAll(int from, int size, String sort) {
+        SortOrder sortOrder = SortOrder.from(sort);
+        return posts.values().stream()
+                .sorted((p1, p2) -> {
+                    int comp = p1.getPostDate().compareTo(p2.getPostDate());
+                    if (!SortOrder.ASCENDING.equals(sortOrder)) {
+                        comp = -1 * comp;
+                    }
+                    return comp;
+                })
+                .skip(from - 1)
+                .limit(size)
+                .toList();
+    }
+
+    public Post findById(long id) {
+        Optional<Post> postOptional = Optional.ofNullable(posts.get(id));
+        if (postOptional.isPresent()) {
+            return postOptional.get();
+        }
+        throw new ConditionsNotMetException("«Пост с id = " + id + " не найден»");
     }
 
     public Post create(Post post) {
