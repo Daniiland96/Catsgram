@@ -3,6 +3,7 @@ package ru.yandex.practicum.catsgram.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.catsgram.exception.ParameterNotValidException;
 import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.service.PostService;
 
@@ -21,13 +22,20 @@ public class PostController {
             @RequestParam(name = "size", defaultValue = "10", required = false) Optional<Integer> sizeOpt,
             @RequestParam(name = "sort", defaultValue = "desc", required = false) String sort) {
 
-        if (fromOpt.isEmpty() || sizeOpt.isEmpty()) {
-            throw new IllegalArgumentException();
+        if (sizeOpt.isEmpty()) {
+            throw new ParameterNotValidException("size", "Не указан размер выборки.");
+        }
+        if (fromOpt.isEmpty()) {
+            throw new ParameterNotValidException("from", "Не указан начальная страница.");
         }
         int from = fromOpt.get();
         int size = sizeOpt.get();
-        if (from <= 0 || size <= 0) {
-            throw new IllegalArgumentException();
+        if (size <= 0) {
+            throw new ParameterNotValidException("size", "Некорректный размер выборки. Размер должен быть больше нуля");
+        }
+        if (from <= 0) {
+            throw new ParameterNotValidException("from",
+                    "Некорректный номер начальной страницы. Номер должен быть больше нуля");
         }
         return postService.findAll(from, size, sort);
     }
