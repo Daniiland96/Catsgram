@@ -22,12 +22,12 @@ public class PostController {
             @RequestParam(name = "size", defaultValue = "10", required = false) Optional<Integer> sizeOpt,
             @RequestParam(name = "sort", defaultValue = "desc", required = false) String sort) {
 
-        if (sizeOpt.isEmpty()) {
-            throw new ParameterNotValidException("size", "Не указан размер выборки.");
-        }
-        if (fromOpt.isEmpty()) {
-            throw new ParameterNotValidException("from", "Не указан начальная страница.");
-        }
+//        if (sizeOpt.isEmpty()) {
+//            throw new ParameterNotValidException("size", "Не указан размер выборки.");
+//        }
+//        if (fromOpt.isEmpty()) {
+//            throw new ParameterNotValidException("from", "Не указан начальная страница.");
+//        }
         int from = fromOpt.get();
         int size = sizeOpt.get();
         if (size <= 0) {
@@ -46,7 +46,7 @@ public class PostController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public Post create(@RequestBody Post post) {
         return postService.create(post);
     }

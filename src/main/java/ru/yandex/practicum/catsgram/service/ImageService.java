@@ -27,7 +27,7 @@ public class ImageService {
     private final PostService postService;
     private final Map<Long, Image> images = new HashMap<>();
 
-    @Value("C:/Users/danii/Desktop/Catsgram")
+    @Value("D:/Учеба/Проекты/Catsgram/image")
     private String imageDirectory;
 
     // получение данных об изображениях указанного поста
